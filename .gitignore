@@ -131,3 +131,6 @@ dmypy.json
 sonarr/
 fullykiosk/
 _test/
+
+test.py
+test*.py
