@@ -14,6 +14,8 @@ async def main(host="localhost", port="8080", username="", password=""):
         response = json.loads(status)
         print("Status:", status)
         print("Number of tracks:", response["number_of_tracks"])
+        print("Play state:", response["play_state"])
+        print("Time signature:", response["time_signature"])
 
 
 loop = asyncio.get_event_loop()

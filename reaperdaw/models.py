@@ -68,6 +68,7 @@ def processLine(line: str):
         return {"number_of_tracks": int(token[1])}
     elif(name == "TRANSPORT"):
         return {
+            "play_state": playState[int(token[1])],
             "transport": {
                 "playstate": playState[int(token[1])],
                 "position_seconds": token[2],
@@ -78,13 +79,12 @@ def processLine(line: str):
         }
     elif(name == "BEATPOS"):
         return {
+            "time_signature": f"{int(token[6])}/{int(token[7])}",
             "beatpos": {
-                "playstate": playState[int(token[1])],
                 "position_seconds": token[2],
                 "full_beat_position": token[3],
                 "measure_cnt": token[4],
                 "beats_in_measure": token[5],
-                "time_signature": f"{int(token[6])}/{int(token[7])}",
             },
         }
     elif(name == "CMDSTATE"):
