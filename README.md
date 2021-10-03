@@ -44,10 +44,85 @@ async def main(host="localhost", port="8080", username="", password=""):
         print("Status:", status)
         print("Number of tracks:", response["number_of_tracks"])
         print("Time signature:", response["time_signature"])
+        print("Play state:", response["play_state"])
+        print("Repeat:", response["repeat"])
+        print("Metronome:", response["metronome"])
 
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
+```
+
+### getStatus response
+
+```json
+{
+  "tracks": [
+    {
+      "index": 0,
+      "name": "MASTER",
+      "flags": [],
+      "volume": "1.000000",
+      "pan": "0.000000",
+      "last_meter_peak": "-1500",
+      "last_meter_pos": "-1500",
+      "width_pan2": "1.000000",
+      "panmode": "0",
+      "sendcnt": "0",
+      "recvcnt": "0",
+      "hwoutcnt": "1",
+      "color": "#000000"
+    },
+    {
+      "index": 1,
+      "name": "Track 1",
+      "flags": [],
+      "volume": "1.000000",
+      "pan": "0.000000",
+      "last_meter_peak": "-1500",
+      "last_meter_pos": "-1500",
+      "width_pan2": "1.000000",
+      "panmode": "3",
+      "sendcnt": "0",
+      "recvcnt": "0",
+      "hwoutcnt": "0",
+      "color": "#764e78"
+    },
+    {
+      "index": 2,
+      "name": "Track 2",
+      "flags": ["selected"],
+      "volume": "1.000000",
+      "pan": "0.000000",
+      "last_meter_peak": "-1500",
+      "last_meter_pos": "-1500",
+      "width_pan2": "1.000000",
+      "panmode": "3",
+      "sendcnt": "0",
+      "recvcnt": "0",
+      "hwoutcnt": "0",
+      "color": "#d9c25b"
+    }
+  ],
+  "repeat": true,
+  "metronome": false,
+  "time_signature": "4/4",
+  "beatpos": {
+    "position_seconds": "0.000000000000000",
+    "full_beat_position": "0.000000000000000",
+    "measure_cnt": "0",
+    "beats_in_measure": "0.000000000010000"
+  },
+  "play_state": "stopped",
+  "transport": {
+    "playstate": "stopped",
+    "position_seconds": "0.000000",
+    "repeat": true,
+    "position_string": "1.1.00",
+    "position_string_beats": "1.1.00"
+  },
+  "number_of_tracks": 2
+}
 ```
 
 [releases]: https://github.com/kubawolanin/python-reaperdaw/releases

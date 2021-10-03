@@ -36,7 +36,7 @@ class Reaper:
         return self._status
 
     async def rewind(self):
-        await self.sendCommand("40084")
+        await self.sendCommand("40172")
 
     async def stop(self):
         await self.sendCommand("1016")
@@ -48,7 +48,7 @@ class Reaper:
         await self.sendCommand("1008")
 
     async def fastForward(self):
-        await self.sendCommand("40085")
+        await self.sendCommand("40173")
 
     async def record(self):
         await self.sendCommand("1013")

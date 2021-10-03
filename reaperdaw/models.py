@@ -106,7 +106,7 @@ def processLine(line: str):
             "sendcnt": token[10],
             "recvcnt": token[11],
             "hwoutcnt": token[12],
-            "color": token[13],
+            "color": "#000000" if int(token[13]) == 0 else f"#{hex(int(token[13]))[3:]}",
         })
         return False
 
