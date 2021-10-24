@@ -56,6 +56,12 @@ class Reaper:
     async def toggleRepeat(self):
         await self.sendCommand("1068")
 
+    async def enableRepeat(self):
+        await self.sendCommand("SET/REPEAT/1")
+
+    async def disableRepeat(self):
+        await self.sendCommand("SET/REPEAT/0")
+
     async def toggleMetronome(self):
         await self.sendCommand("40364")
 
@@ -76,6 +82,18 @@ class Reaper:
 
     async def setMasterVolume(self, volume):
         await self.sendCommand(f"SET/TRACK/0/VOL/{volume}")
+
+    async def getExtState(self, section, key):
+        await self.sendCommand(f"GET/EXTSTATE/{section}/{key}")
+
+    async def setExtState(self, section, key, value):
+        await self.sendCommand(f"SET/EXTSTATE/{section}/{key}/{value}")
+
+    async def setExtStatePersist(self, section, key, value):
+        await self.sendCommand(f"SET/EXTSTATEPERSIST/{section}/{key}/{value}")
+
+    async def getCommand(self, command_id):
+        await self.sendCommand(f"GET/{command_id}")
 
 
 class _RequestsHandler:

@@ -72,7 +72,7 @@ def processLine(line: str):
             "transport": {
                 "playstate": playState[int(token[1])],
                 "position_seconds": token[2],
-                "repeat": bool(token[3]),
+                "repeat": bool(int(token[3])),
                 "position_string": token[4],
                 "position_string_beats": token[5],
             },
