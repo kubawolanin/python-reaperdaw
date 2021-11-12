@@ -122,8 +122,6 @@ def parse(payload: str):
     result = [element for element in parsed if element]
     dictionary = dict(ChainMap(*result))
 
-    print(dictionary)
-
     tracks = dictionary.get("tracks")
 
     # get tracks filtered by FLAG_RECORD_ARMED
