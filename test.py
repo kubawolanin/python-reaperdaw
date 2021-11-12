@@ -4,7 +4,7 @@ import json
 from reaperdaw import Reaper
 
 
-async def main(host="localhost", port="8080", username="", password=""):
+async def main(host="localhost", port="9999", username="", password=""):
 
     async with aiohttp.ClientSession() as session:
         reaper = Reaper(session, host, port, username, password)
@@ -14,6 +14,8 @@ async def main(host="localhost", port="8080", username="", password=""):
         response = json.loads(status)
         print("Status:", status)
         print("Number of tracks:", response["number_of_tracks"])
+        print("Number of armed tracks:", response["number_of_armed_tracks"])
+        print("Armed tracks:", response["armed_tracks"])
         print("Play state:", response["play_state"])
         print("Time signature:", response["time_signature"])
 

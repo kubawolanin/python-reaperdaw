@@ -117,6 +117,17 @@ def parse(payload: str):
     processedLines = map(processLine, lines)
     tracksDict = {"tracks": tracks}
     parsed = list(processedLines)
+
+    # get tracks filtered by FLAG_RECORD_ARMED
+    armedTracks = [
+        track["name"]
+        for track in tracks if FLAG_RECORD_ARMED in track["flags"]
+    ]
+    tracksDict["armed_tracks"] = armedTracks
+
+    # get number of armed tracks
+    tracksDict["number_of_armed_tracks"] = len(armedTracks)
+
     parsed.append(tracksDict)
     result = [element for element in parsed if element]
 

@@ -43,6 +43,8 @@ async def main(host="localhost", port="8080", username="", password=""):
         response = json.loads(status)
         print("Status:", status)
         print("Number of tracks:", response["number_of_tracks"])
+        print("Number of armed tracks:", response["number_of_armed_tracks"])
+        print("Armed tracks:", response["armed_tracks"])
         print("Time signature:", response["time_signature"])
         print("Play state:", response["play_state"])
         print("Repeat:", response["repeat"])
@@ -76,7 +78,7 @@ loop.run_until_complete(main())
     {
       "index": 1,
       "name": "Track 1",
-      "flags": [],
+      "flags": ["record-armed"],
       "volume": "1.000000",
       "pan": "0.000000",
       "last_meter_peak": "-1500",
@@ -121,7 +123,9 @@ loop.run_until_complete(main())
     "position_string": "1.1.00",
     "position_string_beats": "1.1.00"
   },
-  "number_of_tracks": 2
+  "number_of_tracks": 2,
+  "number_of_armed_tracks": 2,
+  "armed-tracks": ["Track 1"]
 }
 ```
 
