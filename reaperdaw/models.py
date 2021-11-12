@@ -25,10 +25,9 @@ playState = {
     6: PLAYSTATE_RECORDPAUSED,
 }
 
-tracks = []
-
 
 def trackFlags(field: int):
+    """Process track flags"""
     flags = []
     if field & 1:
         flags.append(FLAG_FOLDER)
@@ -60,75 +59,81 @@ def trackFlags(field: int):
     return flags
 
 
-def processLine(line: str):
-    token = line.strip().split("\t")
-    name = token[0]
-
-    if(name == "NTRACK"):
-        return {"number_of_tracks": int(token[1])}
-    elif(name == "TRANSPORT"):
-        return {
-            "play_state": playState[int(token[1])],
-            "transport": {
-                "playstate": playState[int(token[1])],
-                "position_seconds": token[2],
-                "repeat": bool(int(token[3])),
-                "position_string": token[4],
-                "position_string_beats": token[5],
-            },
-        }
-    elif(name == "BEATPOS"):
-        return {
-            "time_signature": f"{int(token[6])}/{int(token[7])}",
-            "beatpos": {
-                "position_seconds": token[2],
-                "full_beat_position": token[3],
-                "measure_cnt": token[4],
-                "beats_in_measure": token[5],
-            },
-        }
-    elif(name == "CMDSTATE"):
-        if (token[1] == "40364"):
-            return {"metronome": bool(int(token[2]))}
-        elif (token[1] == "1157"):
-            return {"repeat": bool(int(token[2]))}
-    elif(name == "TRACK"):
-        tracks.append({
-            "index": int(token[1]),
-            "name": token[2],
-            "flags": trackFlags(int(token[3])),
-            "volume": token[4],
-            "pan": token[5],
-            "last_meter_peak": token[6],
-            "last_meter_pos": token[7],
-            "width_pan2": token[8],
-            "panmode": token[9],
-            "sendcnt": token[10],
-            "recvcnt": token[11],
-            "hwoutcnt": token[12],
-            "color": "#000000" if int(token[13]) == 0 else f"#{hex(int(token[13]))[3:]}",
-        })
-        return False
-
-
 def parse(payload: str):
+    """Parse Reaper DAW payload"""
+    tracks = {"tracks": []}
+
+    def processLine(line: str):
+        """Process line"""
+        token = line.strip().split("\t")
+        name = token[0]
+
+        if(name == "NTRACK"):
+            return {"number_of_tracks": int(token[1])}
+        elif(name == "TRANSPORT"):
+            return {
+                "play_state": playState[int(token[1])],
+                "transport": {
+                    "playstate": playState[int(token[1])],
+                    "position_seconds": token[2],
+                    "repeat": bool(int(token[3])),
+                    "position_string": token[4],
+                    "position_string_beats": token[5],
+                },
+            }
+        elif(name == "BEATPOS"):
+            return {
+                "time_signature": f"{int(token[6])}/{int(token[7])}",
+                "beatpos": {
+                    "position_seconds": token[2],
+                    "full_beat_position": token[3],
+                    "measure_cnt": token[4],
+                    "beats_in_measure": token[5],
+                },
+            }
+        elif(name == "CMDSTATE"):
+            if (token[1] == "40364"):
+                return {"metronome": bool(int(token[2]))}
+            elif (token[1] == "1157"):
+                return {"repeat": bool(int(token[2]))}
+        elif(name == "TRACK"):
+            index = int(token[1])
+            tracks["tracks"].append({
+                "index": index,
+                "name": token[2],
+                "flags": trackFlags(int(token[3])),
+                "volume": token[4],
+                "pan": token[5],
+                "last_meter_peak": token[6],
+                "last_meter_pos": token[7],
+                "width_pan2": token[8],
+                "panmode": token[9],
+                "sendcnt": token[10],
+                "recvcnt": token[11],
+                "hwoutcnt": token[12],
+                "color": "#000000" if int(token[13]) == 0 else f"#{hex(int(token[13]))[3:]}",
+            })
+            return tracks
+
     array = payload.split("\n")
     lines = [element for element in array if element]
     processedLines = map(processLine, lines)
-    tracksDict = {"tracks": tracks}
     parsed = list(processedLines)
+    result = [element for element in parsed if element]
+    dictionary = dict(ChainMap(*result))
+
+    print(dictionary)
+
+    tracks = dictionary.get("tracks")
 
     # get tracks filtered by FLAG_RECORD_ARMED
     armedTracks = [
         track["name"]
         for track in tracks if FLAG_RECORD_ARMED in track["flags"]
     ]
-    tracksDict["armed_tracks"] = armedTracks
+    dictionary["armed_tracks"] = armedTracks
 
     # get number of armed tracks
-    tracksDict["number_of_armed_tracks"] = len(armedTracks)
+    dictionary["number_of_armed_tracks"] = len(armedTracks)
 
-    parsed.append(tracksDict)
-    result = [element for element in parsed if element]
-
-    return dict(ChainMap(*result))
+    return dictionary
